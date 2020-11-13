@@ -6,3 +6,17 @@ print(a is b)
 c = 257
 d = 257
 print(c is d)
+
+# Interning strings - Generally not something done unless you really need to optimize your code for performance/memory. An example of a time to use string interning would be when you are dealing with the same string over and over. "this_string" == "this_string" is slow because you assess character by character. If you can intern certain strings, then you can use the is operator to compare memory addresses.
+# If the string looks like an identifier, it will usually be interned. Identifier would be a string that has the same look to a variable, function or class name. 
+a = 'hello'
+b = 'hello'
+print(a is b)
+# This should be false but see above note on the compiler. This should be false because 'hello world' does not look like an identifier.
+c = 'hello world'
+d = 'hello world'
+print(c is d)
+e = '_this_is_a_long_string_that_could_be_used_as_an_identifier'
+f = '_this_is_a_long_string_that_could_be_used_as_an_identifier'
+print(e is f)
+# To see how to use the sys.intern() method to create our own interning of strings, see Part 1 - Functional - Section 3:26
