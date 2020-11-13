@@ -1,4 +1,6 @@
-import sys, ctypes
+import sys
+import ctypes
+# import gc # for garbage collection (Part 1 - Section 3)
 
 # Part 1 - Section 3 - Reference Counting
 
@@ -11,4 +13,3 @@ print(sys.getrefcount(a))
 def ref_count(address):
     return ctypes.c_long.from_address(address).value
 print(ref_count(id(a)))
-
