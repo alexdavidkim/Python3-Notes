@@ -42,4 +42,18 @@
 # print(type(my_new_tuple))
 # print(my_new_tuple)
 
-# for unpacking UNORDERED types (dictionaries and sets) - Unpacking on the left hand side the way ordered types are unpacked is pointless due to the unordered nature. However, unpacking on the right hand side is useful.
+# for unpacking UNORDERED types (dictionaries and sets) - Unpacking on the left hand side the way ordered types are unpacked is pointless due to the unordered nature. However, unpacking on the right hand side is useful. (Order still not guaranteed)
+# my_dict_1 = {'one': 1, 'two': 2}
+# my_dict_2 = {'three': 3, 'four': 4}
+# my_dict_3 = {'four': 4, 'five': 4}
+# new_unpacked_list = [*my_dict_1, *my_dict_2, *my_dict_3]
+# new_unpacked_set = {*my_dict_1, *my_dict_2, *my_dict_3}
+# print(new_unpacked_list)
+# print(new_unpacked_set)
+
+# Nested unpacking - can perform with any iterable
+a, b, (c, d) = [1, 2, [3, 4]]
+print(a)
+print(b)
+print(c)
+print(d)

@@ -26,3 +26,9 @@ my_dict = {
 # for k, v in my_dict.items():
 #     print(k, v)
 
+# ** unpacks k/v pairs into another dictionary. Can only be used on the right hand side. Notice how 'h':5 overwrode 'h':4.
+my_dict_1 = {'p': 1, 'y': 2}
+my_dict_2 = {'t': 3, 'h': 4}
+my_dict_3 = {'h': 5, 'o': 6, 'n': 7}
+merged_dict = {**my_dict_1, **my_dict_2, **my_dict_3}
+print(merged_dict)
