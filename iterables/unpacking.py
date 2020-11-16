@@ -8,6 +8,11 @@
 # b, a = a, b
 # print(a, b)
 
+# Unpacking *args and **kwargs - custom_print takes in a function, print. *args represent the objects that are passed into the standard print function. **kwargs are optional parameters where sep=' ' and end='\n' are defaults. 
+# def custom_print(f, *args, **kwargs):
+#     f(*args, **kwargs)
+# custom_print(print, 'i', 'love', 'life', sep='-', end=' :) :) :)\n')
+
 # The exception to unpacking this way are dictionaries and sets because they are unordered and therefore you can not rely on them to unpack in the order which you specify.
 # my_dict = {
 #     'key1': 1,
@@ -52,8 +57,9 @@
 # print(new_unpacked_set)
 
 # Nested unpacking - can perform with any iterable
-a, b, (c, d) = [1, 2, [3, 4]]
-print(a)
-print(b)
-print(c)
-print(d)
+# a, b, (c, d) = [1, 2, [3, 4]]
+# print(a)
+# print(b)
+# print(c)
+# print(d)
+
