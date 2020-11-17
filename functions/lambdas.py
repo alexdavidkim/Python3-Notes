@@ -14,3 +14,8 @@
 #     'ghi': 100
 # }
 # print(sorted(my_dict, key=lambda k: my_dict[k]))
+
+# sorted() has an optional key parameter that takes a function. The function's job is to tell sorted() how to sort. So in this example, random.random() is being called on every item in the list, thus sorting based on that value.
+# import random
+# my_list = [1,2,3,4,5,6,7,8,9,10]
+# print(sorted(my_list, key=lambda x: random.random()))
