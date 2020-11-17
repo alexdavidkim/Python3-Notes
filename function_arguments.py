@@ -69,3 +69,55 @@
 #     print(type(kwargs))
 #     print(kwargs)
 # args_and_kwargs_func(10, 20, True, False, a=1000, b=2000, c=5000)
+
+# Pitfalls! - Part 1 - Functional - Section 5:76 - In general, be careful when having mutable objects in arguments.
+# When a module is loaded, all of the code is run and all of the objects are stored in memory. my_func is created with a keyword argument date=datetime.utcnow(). When the module loads, the date argument will point to the date that the module loaded, not when the function is called (unless the user specifies a new date argument).
+from datetime import datetime
+
+# def my_func(date=datetime.utcnow()):
+#     print(date)
+
+# Solution
+# If the user inputs a date, the date variable assigns itself to that date. If not, date is falsy and will assign date = datetime.utcnow()
+# def my_func(date=None):
+#     if date is None:
+#         date = datetime.utcnow()
+#     print(date)
+
+# The opposite of this would be using a mutable object in arguments. We may have wanted to have a=[1,2,3] but somewhere down the module, 4 was appended.
+# my_iterable = [1,2,3]
+# def my_func(a=my_iterable):
+#     print(a)
+# my_iterable.append(4)
+# my_func()
+# Solution - use immutable objects
+# my_iterable = (1,2,3)
+# def my_func(a=my_iterable):
+#     print(a)
+# my_iterable.append(4) # Error
+# my_func()
+
+# When the module loads, grocery_list is pointing to a memory address of an empty list []. When we call add_item() and assign the return to store1, we are making store1 -> grocery_list in memory. Then when we create a variable, store2, it is pointing to grocery_list again.
+# def add_item(item, amt=1, grocery_list=[]):
+#     grocery_list.append({f'{item}': amt})
+#     return grocery_list
+# store1 = add_item('apples', amt=5)
+# add_item('bananas', amt=5, grocery_list=store1)
+# print(store1)
+# store2 = add_item('candy', amt=2)
+# add_item('doritos', amt=1, grocery_list=store2)
+# print(store2)
+# print(store1 is store2)
+# Solution - 
+# def add_item(item, amt=1, grocery_list=None):
+#     if grocery_list is None:
+#         grocery_list = []
+#     grocery_list.append({f'{item}': amt})
+#     return grocery_list
+# store1 = add_item('avocados', amt=6)
+# add_item('bacon', 1, grocery_list=store1)
+# print(store1)
+# store2 = add_item('chocolate', amt=1)
+# add_item('dog treats', amt=3, grocery_list=store2)
+# print(store2)
+# print(store1 is store2)
