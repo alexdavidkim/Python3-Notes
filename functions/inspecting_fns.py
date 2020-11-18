@@ -1,6 +1,8 @@
 # Part 1 - Functional - Section 6:85-86
 
-import inspect
+from inspect import isfunction, ismethod, isroutine,\
+                    getsource, getmodule, getcomments, \
+                    signature
 
 # TODO: Python will track to-do's which can be accessed with inspect.getcomments()
 # This is a comment in the example function
@@ -11,6 +13,7 @@ def my_func(a: int,
             kw2: 'second keyword only arg' = None,
             **kwargs: 'additional keyword-only args') -> 'return annotation goes here':
     """This is the docstring for the example function"""
+    #pylint: disable=unused-variable
     local_var_1 = None
     local_var_2 = None
     pass
@@ -32,34 +35,32 @@ def my_func(a: int,
 # returns a dictionary with keyword argument defaults
 # print(my_func.__kwdefaults__)
 
-# obj.__code__ returns a code object with several features
-# print(my_func.__code__)
-# print(dir(my_func.__code__))
-
-# returns a tuple with variable names (parameters and local scope)
-print(my_func.__code__.co_varnames)
-
+# inspect module makes a lot of the __code__ methods easier but see documentation on __code__ if needed.
 # returns a bool if object is a function
-# print(inspect.isfunction(my_func))
+# print(isfunction(my_func))
 
 # returns a bool if object is a method
-# print(inspect.ismethod(my_func))
+# print(ismethod(my_func))
 
 # returns a bool if object is either a function or method
-# print(inspect.isroutine(my_func))
+# print(isroutine(my_func))
 
 # returns a string containing the entire object (including docstrings and annotations)
-# print(inspect.getsource(my_func))
+# print(getsource(my_func))
 
 # returns the module of the object
-# print(inspect.getmodule(my_func))
-# print(inspect.getmodule(print))
+# print(getmodule(my_func))
+# print(getmodule(print))
 
 # returns comments and use for to-do's
-# print(inspect.getcomments(my_func))
+# print(getcomments(my_func))
 
 # returns docstring
 # print(my_func.__doc__)
 
 # returns annotations
 # print(my_func.__annotations__)
+
+#
+# print(dir(signature(my_func)))
+# print(signature(my_func).return_annotation)
