@@ -75,3 +75,50 @@
 #     print(x)
 # for x in my_list_squared:
 #     print(x)
+
+from functools import reduce
+
+# Reducing functions
+
+# Reduce(f, sequence) - returns a single element based on the function's return expression. Will work with any iterable.
+# recursive method to find the largest sum in a sequence.
+# my_sequence = [10, 13, 19, 7, 22, 33, 17]
+# print(reduce(lambda a, b: a if a > b else b, my_sequence))
+
+# min()
+# print(min([1,2,3,4,5,0]))
+# max()
+# print(max([1,2,3,4,5,0]))
+# sum()
+# print(sum([1,2,3,4,5,0]))
+
+# any() returns True if any element in the iterable is truthy. bool_result is taking advantage of the or operator. custom_any_f is how Python actually writes any()
+# my_list = [None, False, 0, '', 'a']
+# print(any(my_list))
+# bool_result = bool(0) or bool(None) or bool('') or bool(100)
+# print(bool_result)
+# custom_any_f = reduce(lambda a, b: bool(a) or bool(b), my_list)
+# print(custom_any_f)
+
+# all() returns True if all elements in an iterable are truthy. custom_all_f takes advantage of the and operator and I believe this is how all() is written.
+# my_list = [True, 'a', not None]
+# print(any(my_list))
+# custom_all_f = reduce(lambda a, b: bool(a) and bool(b), my_list)
+# print(custom_all_f)
+
+# Custom product reduce function
+# my_list = [2,4,6,8]
+# get_product = reduce(lambda a, b: a * b, my_list)
+# print(get_product)
+
+# Factorial - non-recursive method
+# n = 10
+# get_factorial = reduce(lambda a, b: a * b, range(1, n))
+# print(get_factorial)
+
+# Reduce does have an optional initializer argument which is primarily used to handle in the event of an empty iterable.
+# Without the initializer of 0, if this function is passed an empty iterable, it throws an error. Instead it now returns 0. However, be careful what is passed here. For instance, if this was a sum function, and the initializer was 1, it would incorrectly have your sum total + 1. The same goes for multiplication and multiplying by 0.
+# my_list = []
+# print(reduce(lambda a, b: a + b, my_list, 0))
+# my_list = []
+# print(reduce(lambda a, b: a * b, my_list, 1))

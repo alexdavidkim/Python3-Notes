@@ -2,3 +2,4 @@ Part 1 - Functional
     - All of Section 4 except Booleans
     - Section 5-77: Second half of video recursion
     - Section 6-85/86: inspect.signature and ['KEYWORD_ONLY', 'POSITIONAL_ONLY', 'POSITIONAL_OR_KEYWORD', 'VAR_KEYWORD', 'VAR_POSITIONAL']
+    - Section 6:94/95 - operator module (also didn't fully understand the power of partials)
