@@ -15,9 +15,9 @@
 # print(c == a)
 
 # None is an object with a shared reference. All variables pointing to None will share the same reference. None is used as a placeholder to indicate they are an empty value not set yet, generally.
-a = None
-b = None
-c = None
-print(a is b is c)
-x = 10
-print(x is not None)
+# a = None
+# b = None
+# c = None
+# print(a is b is c)
+# x = 10
+# print(x is not None)

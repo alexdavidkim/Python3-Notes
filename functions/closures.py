@@ -1,4 +1,5 @@
 # Closures - Part 1 - Functional - Section 7:101
+
 # Closures are simply a function plus an extended scope that contains the free variables not defined within the function. Think of closures as a function that can be stored as a variable with free, hidden variables.
 
 # ***
@@ -18,39 +19,43 @@
 #         return total / count
 
 #     return add
-
+# ***
 
 # Deep Dive - Python creates an intermediary object (cell) between the shared variables that have different scopes and the object in memory they are pointing to. In the example below, inner_func AND x = 'x in closure' are the components of the closure. When inner_func is returned, one might think it would throw an error when called because it's referencing a variable x that is not defined in its scope. But it is. x is a free variable that is part of the closure. inner_func's x AND outer_func's x both point to the intermediary cell object. That cell object points to the type string value 'x in closure' (inner_func x AND outer_func x) -> cell object -> 'x in closure'. So even though outer_func x isn't pointing to the cell object after execution, inner_func x is and therefore still has access. Cells are required because they keep the variables pointing at the same memory address. Example: strings are immutable so if you changed x in one location, you want the closure to change it in all locations but wouldn't without a cell.
 # x = 'x in module scope'
 # def outer_func():
-    #pylint: disable=unused-variable
-    # a = 100
-    # x = 'x in closure'
-    # def inner_func():
-        # print(x)
-    # return inner_func
+# pylint: disable=unused-variable
+# a = 100
+# x = 'x in closure'
+# def inner_func():
+#     print(x)
+# return inner_func
 # fn is referencing a CALLED outer_func() which has a return value of an UNCALLED inner_func. So fn is an uncalled inner_func and we just call it to execute inner_func() and x is still accessed because it is part of the closure.
 # fn = outer_func()
 # fn()
 
 # Tricks - 
+
 # Returns a tuple with all free variables.
 # print(fn.__code__.co_freevars) 
-# Shows the cell object and where it's pointing to.
+# Shows the cell object and where it's pointing to. Returns None obj is not a closure.
 # print(fn.__closure__) 
 
-# def counter():
-#     count = 0
+# Try below in terminal... 'fn = counter()' is the first and ONLY call to counter(). It will run all of the code in 'def counter(count=0):' up until and including 'return increment', which will now make 'fn = increment'. Now counter is not a part of fn in any way other than getting the free variable count. So fn is a free variable + everything in increment until and including the return statement. You can still create "instances" of counter() but fn is now increment + free variables.
+
+# def counter(count=0):
 #     def increment():
 #         nonlocal count
 #         count += 1
 #         return count
+#     print('This will only print once!')
 #     return increment
 # fn = counter()
 # print(fn())
 # print(fn())
 
 # f1 and f2 both create different instances of the closure and cell, even though they both point to the singleton object of 0. The opposite is the next example.
+
 # def counter():
 #     count = 0
 #     def increment():
@@ -102,7 +107,7 @@
 # print(adders[1](10))
 # print(adders[2](10))
 
-# fn returns inner function unexecuted. inner returns inc function unexecuted. inc() is a closure with 2 free variables: n, start. So essentially what the nested incrementer function does is take n which is how much to increment by, start which specifies a starting number, and then inc() performs the work of start += n. To implement this nested function, we create fn which returns inner. Then we create our final function increment_by_2_start_100 by making it = fn(100).
+# # fn returns inner function unexecuted. inner returns inc function unexecuted. inc() is a closure with 2 free variables: n, start. So essentially what the nested incrementer function does is take n which is how much to increment by, start which specifies a starting number, and then inc() performs the work of start += n. To implement this nested function, we create fn which returns inner. Then we create our final function increment_by_2_start_100 by making it = fn(100).
 # def incrementer(n):
 #     def inner(start):
 #         def inc():
@@ -118,6 +123,7 @@
 # print(increment_by_2_start_100())
 
 # Applications Part 1 
+
 # def averager():
 #     total = 0
 #     count = 0
@@ -147,3 +153,39 @@
 # a = Averager()
 # print(a.add(10))
 # print(a.add(20))
+
+from time import perf_counter
+
+# A class that when initialized creates a start time and when called (__call__ allows the instance be called directly and returns the code) returns the time elapsed since instantiation.
+# class Timer:
+#     def __init__(self):
+#         self.start = perf_counter()
+#     def __call__(self):
+#         return perf_counter() - self.start
+# t1 = Timer()
+# print(t1())
+
+# Run in interpreter - This shows that sometimes a class with limited functionality should simply be written as a closure
+# def start_timer():
+#     start = perf_counter()
+#     def poll():
+#         return perf_counter() - start
+#     return poll
+
+# Here we have a closure that's purpose is to count how many times a given function has been called and store the function name: count in a dictionary. This of course works with different functions because each time counter(f) is being created, it's creating a new closure object. Section 7-104 - he expands on this by putting the dictionary as an argument to counter so it's out of the global scope. I wanted to keep it as is so show how closures work with functions as well.
+# counters = dict()
+# def counter(f):
+#     count = 0
+#     def inner(*args, **kwargs):
+#         nonlocal count
+#         count += 1
+#         counters[f.__name__] = count
+#         return f(*args, **kwargs)
+#     return inner
+
+# f_sum = counter(sum)
+# f_dir = counter(dir)
+# f_sum((1, 2))
+# f_dir(1)
+# f_dir(None)
+# print(counters)
