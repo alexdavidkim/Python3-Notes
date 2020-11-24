@@ -113,7 +113,7 @@ from functools import reduce
 
 # Factorial - non-recursive method
 # n = 10
-# get_factorial = reduce(lambda a, b: a * b, range(1, n))
+# get_factorial = reduce(lambda a, b: a * b, range(1, n+1))
 # print(get_factorial)
 
 # Reduce does have an optional initializer argument which is primarily used to handle in the event of an empty iterable.

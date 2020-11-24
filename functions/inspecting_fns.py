@@ -61,6 +61,5 @@ def my_func(a: int,
 # returns annotations
 # print(my_func.__annotations__)
 
-#
 # print(dir(signature(my_func)))
 # print(signature(my_func).return_annotation)

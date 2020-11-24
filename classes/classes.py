@@ -1,6 +1,13 @@
 # Overwriting dunder methods for our own functionality is a key feature included with Python
-# Getters and setters - 'Part 1 - Section 2 - Classes - 26:00'. In the __init__ method, we are actually calling the setter method decorated by @width.setter. We do this to allow the custom case of ValueError's being raised when an object is created with length or width <= 0. To be clear, do not make custom getters and setters unless necessary. Use the out-of-the-box features Python gives you by just initializing as self.width = width and self.height = height.
-# Good heuristic? When you create custom getters/setters, if you want direct access to the properties in __init__, assign to a private method like _width. However, this will be rare and you will generally want to assign it to the setter method.
+# Getters and setters - 'Part 1 - Section 2 - Classes - 27:50'. 
+# See 'classes/property_dec.py' for a simple explanation/Youtube video 
+# In the __init__ method, we are actually calling the setter method decorated by @width.setter. We do this to allow the custom case of ValueError's being raised when an object is created with length or width <= 0. 
+# Here are the steps an instance takes:
+    # r1 = Rectangle(10, 20) passes in 10, 20 to the __init__ method in Rectangle class
+    # self.width and self.height both reference their setter methods (Going forward we will use width as the example)
+    # def width(self, width) - takes in 10. If 10 <= 0, raise ValueError, else, self._width = width. So the only way to access this private variable, _width, is through the setter function.
+        # @width_setter along with @property are built-in decorators that allow us to get and set attributes with this syntax: OBJ.name or OBJ.name = 'name'
+    # Now if we want to Get the width, @property allows us to say, r1.width, which returns self._width
 
 # class Rectangle:
 #     def __init__(self, width, height):
@@ -38,21 +45,21 @@
 
     # __repr__ usually prints out how an object was created
     # def __repr__(self):
-        # return f'Rectangle({self.width}, {self.height})'
+    #     return f'Rectangle({self.width}, {self.height})'
 
-    # __eq__ is represented as 'r1 == r2' where r1 is self, == is __eq__, and r2 is other. Watch 'Part 1 - Section 2 - Classes - 15:11' for an explanation of isinstance() being used below
+    # # __eq__ is represented as 'r1 == r2' where r1 is self, == is __eq__, and r2 is other. Watch 'Part 1 - Section 2 - Classes - 15:11' for an explanation of isinstance() being used below
     # def __eq__(self, other):
-        # if isinstance(other, Rectangle):
-            # return self.width == other.width and self.height == other.height 
-        # else:
-            # return False
+    #     if isinstance(other, Rectangle):
+    #         return self.width == other.width and self.height == other.height 
+    #     else:
+    #         return False
 
-    # __lt__ is less than. See documentation for __gt__, __le__, etc. As the programmer, we are deciding how to define the comparison operator of less than. We could choose to make it anything we want. Beautiful!
+    # # # __lt__ is less than. See documentation for __gt__, __le__, etc. As the programmer, we are deciding how to define the comparison operator of less than. We could choose to make it anything we want. Beautiful!
     # def __lt__(self, other):
     #     if isinstance(other, Rectangle):
     #         return self.area() < other.area()
-        # else:
-            # return NotImplemented # See '/built_in_constants.py'
+    #     else:
+    #         return NotImplemented # See '/built_in_constants.py'
 
 # r1 = Rectangle(10, 20)
 # r2 = Rectangle(10, 20)
