@@ -6,3 +6,5 @@ Part 1 - Functional
     - Section 7:107 - timing 3 ways to calculate fibonacci sequence
     - Section 7:109 - Application: Memoization
     - Section 7:111 - Decorators: Coding
+    - Section 7:114-116 - Was getting a little tired of decorators, will circle back when needed
+    - Section 8 - Tuples

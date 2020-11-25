@@ -63,3 +63,13 @@
 # print(c)
 # print(d)
 
+# Dummy variables - when we don't care about a particular variable (it still counts as a variable but we are indicating we don't need it)
+# city, _, population = ('Beijing', 'China', 21_000_000)
+
+# Dummy variables (more than one)
+# record = ('DJIA', 2018, 1, 19, 25987.35, 26071.72, 25942.83, 26071.71)
+# Instead of this
+# symbol, year, month, day, open, high, low, close = record 
+# Do this
+# symbol, year, month, day, *_, close  = record
+# print(*_)
