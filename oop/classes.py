@@ -37,7 +37,7 @@ class BuiltInsClass:
 # print('\n-----------------\n')
 # print(built_ins_obj.__dict__)
 
-                    # --- Getters and setters  ---
+                    # --- Property Getters and Setters  ---
 
 # The goal was to cache the area so we don't need to calculate it everytime the property was accessed
 
@@ -64,3 +64,29 @@ class Circle:
             self._area = pi * (self.radius ** 2)
         return self._area
 
+                    # --- Class Methods  ---
+
+# Why Class Methods?
+    # When we want to call a method that only binds to the class but can be called on either the class or an instance.
+
+class ClassMethod:
+
+    @classmethod
+    def help(cls):
+        print(f'Call me from an instance or the class and my argument will always be: {cls}!')
+
+                    # --- Static Methods  ---
+
+# Why Static Methods?
+    # They should be called static functions because we never want them bound.
+    # Discouraged because the use cases are thin and if you want a function to be independent of the class or the instance, just move it to the module scope.
+
+class StaticClass:
+
+    @staticmethod
+    def static_hello():
+        print('You can call me from either the class or an instance and I will not be bound to either!')
+
+StaticClass.static_hello()
+static = StaticClass()
+static.static_hello()
