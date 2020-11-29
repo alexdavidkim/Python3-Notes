@@ -1,4 +1,4 @@
 {
     "python.linting.enabled": false,
-    "python.pythonPath": "/home/alex/Python3-DeepDive/venv/bin/python3"
+    "python.pythonPath": "venv/bin/python"
 }
