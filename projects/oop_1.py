@@ -1,5 +1,3 @@
-print('running oop_1.py')
-
 from datetime import datetime
 import pytz
 
@@ -32,10 +30,13 @@ class Account:
     def account_number(self):
         return self._account_number
 
-    def deposit(self, amount, deposit_type='D'):
+    def deposit(self, amount, transaction_type='D'):
+        utc_formatted = Account.get_utc().strftime('%m%d%y%H%M%S')
         self._balance += amount
-        conf_num = self.new_confirmation_number(deposit_type)
-        return f'Deposit complete, new balance: {self._balance}. Confirmation number: {conf_num}.'     
+        global total_transactions
+        total_transactions += 1
+        conf_num = ConfirmationNumber(transaction_type, self.account_number, utc_formatted, total_transactions).get_num()
+        return f'Deposit complete, new balance: {self._balance}. Confirmation number: {conf_num}.'
 
     def withdraw(self, amount):
         if (self._balance - amount) < 0:
@@ -49,17 +50,12 @@ class Account:
         accrued_interest = self._balance * (1 * Account.INT_RATE)
         return self.deposit(accrued_interest, 'I')
 
-    def new_confirmation_number(self, transaction_type):
-        utc_formatted = Account.get_utc().strftime('%m%d%y-%H%M%S')
-        global total_transactions
-        total_transactions += 1
-        conf_num = f'{transaction_type}-{self.account_number}-{utc_formatted}-{total_transactions}'
-        return conf_num
-
-    def inspect_confirmation_number(num):
+    @classmethod
+    def inspect_confirmation_number(cls, num, pref_time_zone='UTC'):
         split = num.split('-')
-        transaction_type, account_number, date, time, transaction_id = split[0], split[1], split[2], split[3], split[4]
-        return transaction_type, account_number, date, time, transaction_id
+        transaction_type, account_number, date, transaction_id = split[0], split[1], split[2], split[3]
+        conf_num = ConfirmationNumber(transaction_type, account_number, date, transaction_id)
+        return conf_num
 
     def get_utc():
         return datetime.now(tz=pytz.UTC)
@@ -68,7 +64,20 @@ class Account:
         user_time = Account.get_utc().astimezone(pytz.timezone(self.pref_time_zone))
         return user_time
 
+class ConfirmationNumber:
+
+    def __init__(self, transaction_type, account_number, date, transaction_id):
+        self.transaction_type = transaction_type
+        self.account_number = account_number
+        self.date = date
+        self.transaction_id = transaction_id
+
+    def get_num(self):
+        return f'{self.transaction_type}-{self.account_number}-{self.date}-{self.transaction_id}'
+
+
 user1 = Account('elon', 'musk', pref_time_zone='US/Pacific', balance=100)
 
-conf = Account.inspect_confirmation_number('W-100001-112920-024215-2')
-print(conf)
+# 'W-100001-112920024215-2'
+
+print(user1.deposit(10))
