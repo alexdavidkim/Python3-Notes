@@ -1,3 +1,5 @@
+# https://howchoo.com/g/ywi5m2vkodk/working-with-datetime-objects-and-timezones-in-python
+
 import datetime
 import pytz
 from pprint import pprint
@@ -34,7 +36,8 @@ dt_today = datetime.datetime.today()
 # Could use .utcnow() but this isn't timezone aware. So use .now(tz=pytz.UTC).
 # Can pass in any timezone as argument.
 dt_utcnow = datetime.datetime.now(tz=pytz.UTC)
-print(f'The current timezone aware UTC time is: {dt_utcnow}.')
+print(dt_utcnow)
+# print(f'The current timezone aware UTC time is: {dt_utcnow}.')
 
 current_user_time = dt_utcnow.astimezone(pytz.timezone('US/Pacific'))
 # print(f'If I want to store UTC times in a db, I will need this variable: {current_user_time.time()} to display the users preferred time.')

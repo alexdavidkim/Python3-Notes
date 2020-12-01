@@ -1,14 +1,14 @@
-from datetime import datetime
+import datetime
 import pytz
 
 # utc = pytz.utc
 # all_timezones = pytz.all_timezones
 
 # est = pytz.timezone('America/New_York')
-# print(datetime.now(tz=est))
+# print(datetime.datetime.now(tz=est))
 
 
-# UTC = datetime.now(tz=pytz.UTC)
+# UTC = datetime.datetime.now(tz=pytz.UTC)
 # print(UTC.strftime('%m%d%y-%H%M%S'))
 
 class MyClass:
@@ -90,7 +90,7 @@ class Account:
         return conf_num
 
     def get_utc():
-        return datetime.now(tz=pytz.UTC)
+        return datetime.datetime.now(tz=pytz.UTC)
 
     def get_user_time(self):
         user_time = Account.get_utc().astimezone(pytz.timezone(self.pref_time_zone))
@@ -104,23 +104,24 @@ class ConfirmationNumber:
         self.time = time
         self.transaction_id = transaction_id
         if pref_time_zone != 'UTC':
-            dt_time = datetime.strptime(time, '%m%d%y%H%M%S')
-            user_time = dt_time.astimezone(pytz.timezone(pref_time_zone))
+            dt_naive_obj = datetime.datetime.strptime(time, '%m%d%y%H%M%S')
+            utc_now = pytz.utc.localize(dt_naive_obj)
+            user_time = utc_now.astimezone(pytz.timezone(pref_time_zone))
             self.user_time = user_time
+        else:
+            self.user_time = time
 
     def get_num(self):
         return f'{self.transaction_type}-{self.account_number}-{self.time}-{self.transaction_id}'
 
-    
-
 
 user1 = Account('elon', 'musk', pref_time_zone='US/Pacific', balance=100)
 
-# 'W-100001-112920024215-2'
-
 conf_num = user1.inspect_conf_num('W-100001-113020004935-2', 'US/Central')
-print(conf_num.transaction_type)
-print(conf_num.account_number)
-print(conf_num.time)
-print(conf_num.transaction_id)
-print(conf_num.user_time)
+# print(conf_num.transaction_type)
+# print(conf_num.account_number)
+# print(conf_num.time)
+# print(conf_num.transaction_id)
+# print(conf_num.user_time)
+
+# how do I convert a time passed in to offset?
