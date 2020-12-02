@@ -24,7 +24,7 @@ class Account:
         self.last_name = last_name
         self.pref_time_zone = pref_time_zone
         self._account_number = DB.generate_account_number()
-        self._balance = balance
+        self._balance = float(balance)
 
     @property
     def balance(self):
@@ -64,10 +64,10 @@ class Account:
         accrued_interest = self._balance * (1 * Account.INT_RATE)
         return self.deposit(accrued_interest, transaction_type='I')
 
-    @classmethod
-    def inspect_conf_num(cls, num, pref_time_zone='UTC'):
+    @staticmethod
+    def inspect_conf_num(num, pref_time_zone='UTC'):
         split = num.split('-')
-        transaction_type, account_number, time, transaction_id = split[0], split[1], split[2], split[3]
+        transaction_type, account_number, time, transaction_id = split
         conf_num = ConfirmationNumber(transaction_type, account_number, time, transaction_id, pref_time_zone)
         return conf_num
 
@@ -96,3 +96,10 @@ user2 = Account('lex', 'fridman', pref_time_zone='US/Central', balance=50)
                         # ------------ Notes -----------------
 
 # Could have used a generator function for the transaction ids or itertools.count()
+# Force floats in the initializer so it applies downwards
+# Transaction types could be in a dictionary
+# Could have utilized a tuple to read inspect_conf_num instead of a class and just put the get_num function inside the Account class
+
+c = user1.inspect_conf_num('D-100001-120220101703-1', pref_time_zone='US/Central')
+
+print(c.user_time)
