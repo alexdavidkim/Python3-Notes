@@ -1,13 +1,19 @@
-from datetime import datetime
+import datetime
 import pytz
 
-acct_num_db = [100000]
-total_transactions = 0
+def get_utc_formatted():
+    return datetime.datetime.now(tz=pytz.UTC).strftime('%m%d%y%H%M%S')
 
-def generate_account_number():
-    acct_num = acct_num_db[-1] + 1
-    acct_num_db.append(acct_num)
-    return acct_num
+class DB:
+
+    ACCT_NUMS = [100000]
+    TOTAL_TRANSACTIONS = 0
+    CONFIRMATION_NUMS = []
+
+    def generate_account_number():
+        acct_num = DB.ACCT_NUMS[-1] + 1
+        DB.ACCT_NUMS.append(acct_num)
+        return acct_num
 
 class Account:
     
@@ -17,7 +23,7 @@ class Account:
         self.first_name = first_name
         self.last_name = last_name
         self.pref_time_zone = pref_time_zone
-        self._account_number = generate_account_number()
+        self._account_number = DB.generate_account_number()
         self._balance = balance
 
     @property
@@ -30,54 +36,63 @@ class Account:
     def account_number(self):
         return self._account_number
 
+    @property
+    def full_name(self):
+        return f'{self.first_name.title()} {self.last_name.title()}'
+
     def deposit(self, amount, transaction_type='D'):
-        utc_formatted = Account.get_utc().strftime('%m%d%y%H%M%S')
+        utc_formatted = get_utc_formatted()
         self._balance += amount
-        global total_transactions
-        total_transactions += 1
-        conf_num = ConfirmationNumber(transaction_type, self.account_number, utc_formatted, total_transactions).get_num()
+        DB.TOTAL_TRANSACTIONS += 1
+        conf_num = ConfirmationNumber(transaction_type, self.account_number, utc_formatted, DB.TOTAL_TRANSACTIONS).get_num()
+        DB.CONFIRMATION_NUMS.append(conf_num)
         return f'Deposit complete, new balance: {self._balance}. Confirmation number: {conf_num}.'
 
     def withdraw(self, amount):
+        utc_formatted = get_utc_formatted()
+        DB.TOTAL_TRANSACTIONS += 1
         if (self._balance - amount) < 0:
-            conf_num = self.new_confirmation_number('X')
-            raise ValueError(f'Transaction declined. You can not withdraw more than {self._balance}. Please try again. Confirmation number: {conf_num}.')
+            conf_num = ConfirmationNumber('X', self.account_number, utc_formatted, DB.TOTAL_TRANSACTIONS).get_num()
+            DB.CONFIRMATION_NUMS.append(conf_num)
+            raise ValueError(f'Transaction declined. You can not withdraw more then {self._balance}. Please try again. Confirmation number: {conf_num}.')
         self._balance -= amount
-        conf_num = self.new_confirmation_number('W')
+        conf_num = ConfirmationNumber('W', self.account_number, utc_formatted, DB.TOTAL_TRANSACTIONS).get_num()
+        DB.CONFIRMATION_NUMS.append(conf_num)
         return f'Withdraw complete, new balance: {self._balance}. Confirmation number: {conf_num}.'
 
     def add_interest(self):
         accrued_interest = self._balance * (1 * Account.INT_RATE)
-        return self.deposit(accrued_interest, 'I')
+        return self.deposit(accrued_interest, transaction_type='I')
 
     @classmethod
-    def inspect_confirmation_number(cls, num, pref_time_zone='UTC'):
+    def inspect_conf_num(cls, num, pref_time_zone='UTC'):
         split = num.split('-')
-        transaction_type, account_number, date, transaction_id = split[0], split[1], split[2], split[3]
-        conf_num = ConfirmationNumber(transaction_type, account_number, date, transaction_id)
+        transaction_type, account_number, time, transaction_id = split[0], split[1], split[2], split[3]
+        conf_num = ConfirmationNumber(transaction_type, account_number, time, transaction_id, pref_time_zone)
         return conf_num
-
-    def get_utc():
-        return datetime.now(tz=pytz.UTC)
-
-    def get_user_time(self):
-        user_time = Account.get_utc().astimezone(pytz.timezone(self.pref_time_zone))
-        return user_time
 
 class ConfirmationNumber:
 
-    def __init__(self, transaction_type, account_number, date, transaction_id):
+    def __init__(self, transaction_type, account_number, time, transaction_id, pref_time_zone='UTC'):
         self.transaction_type = transaction_type
         self.account_number = account_number
-        self.date = date
+        self.time = time
         self.transaction_id = transaction_id
+        if pref_time_zone != 'UTC':
+            dt_naive_obj = datetime.datetime.strptime(time, '%m%d%y%H%M%S')
+            utc_now = pytz.utc.localize(dt_naive_obj)
+            user_time = utc_now.astimezone(pytz.timezone(pref_time_zone)).strftime('%b %d, %Y %I:%M:%S-%z-%Z')
+            self.user_time = user_time
+        else:
+            self.user_time = time
 
     def get_num(self):
-        return f'{self.transaction_type}-{self.account_number}-{self.date}-{self.transaction_id}'
+        return f'{self.transaction_type}-{self.account_number}-{self.time}-{self.transaction_id}'
 
 
 user1 = Account('elon', 'musk', pref_time_zone='US/Pacific', balance=100)
+user2 = Account('lex', 'fridman', pref_time_zone='US/Central', balance=50)
 
-# 'W-100001-112920024215-2'
+                        # ------------ Notes -----------------
 
-print(user1.deposit(10))
+# Could have used a generator function for the transaction ids or itertools.count()
